@@ -8,9 +8,12 @@ import optparse
 def get_arguments():
     parser = optparse.OptionParser()
     parser.add_option("-w", "--wordlist", dest="wordlist", help="[+] path of wordlist")
+    parser.add_option("-t", "--target", dest="target", help="[+] target website")
     options = parser.parse_args()[0]
     if not options.wordlist:
         parser.error("[-] Please select the wordlist path")
+    elif not options.target:
+        parser.error("[-] Please select the target website")
     return options
 
 def request(url):
@@ -29,14 +32,14 @@ def request(url):
     except requests.exceptions.ConnectionError:
         pass
 
-target_url = "google.com"
 option = get_arguments()
 wordlist_path = option.wordlist
+target_site = option.target
 
 with open(wordlist_path, "r") as wordlist_file:
     for line in wordlist_file:
         word = line.strip()
-        test_url = word + "." + target_url
+        test_url = target_site + "/" + word
         response = request(test_url)
         if response:
             print(test_url)
